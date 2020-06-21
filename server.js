@@ -21,4 +21,4 @@ app.get("/", function (request, response) {
 });
 
 
-require("./articles.js")(app);
+require("./articles.js")(app, sql);
