@@ -13,9 +13,9 @@ module.exports = function (app, sql) {
     app.get("/articles/:key", function (request, response) {
 
         sql.getArticleByKey({ key: request.params.key },
-            function(article) {
+            function (article) {
                 response.send(article);
-            }      );
+            });
     });
 
 

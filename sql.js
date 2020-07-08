@@ -19,7 +19,9 @@ const Article = sequelize.define('article', {
     date: { type: Sequelize.DATE },
     content: { type: Sequelize.TEXT },
     description: { type: Sequelize.TEXT },
-    imageUrl: { type: Sequelize.STRING }
+    imageUrl: { type: Sequelize.STRING },
+    viewCount: { type: Sequelize.INTEGER },
+    published: { type: Sequelize.BOOLEAN },
 });
 
 
@@ -36,7 +38,7 @@ init = function () {
     Article.sync({ force: true }).then(() => {
         Article.create({
             title: 'Firrtt',
-            content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt \
+            content: 'Lorem ipsum  dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt \
             ut labore et dolore magna aliqua. In nibh mauris cursus mattis molestie a. Et ultrices neque ornare \
             aenean euismod elementum nisi. Purus faucibus ornare suspendisse sed nisi lacus. Tincidunt arcu non \
             sodales neque sodales ut etiam sit. Ac turpis egestas sed tempus urna et pharetra pharetra. Mattis\
@@ -50,6 +52,7 @@ init = function () {
             date: new Date(),
             key: 'first',
             imageUrl: 'https://loremflickr.com/320/240/hair',
+            published: true,
         });
         Article.create({
             title: 'Second',
@@ -65,19 +68,35 @@ init = function () {
             date: new Date(),
             key: 'second',
             imageUrl: 'https://loremflickr.com/320/240/snail',
+            published: false,
         });
     });
 }
 
 
 getArticles = function (callback) {
-    Article.findAll({ order: sequelize.literal("date DESC") }).then(articles => callback(articles));
+    Article.findAll({ order: sequelize.literal("date DESC"), 
+    where: {published: true} 
+    }).then(articles => callback(articles));
 };
 
 getArticleByKey = function (options, callback) {
-    Article.findOne({ where: { key: options.key } }).then(article => callback(article));
+    Article.findOne({ where: { key: options.key, published: true } }).then(article => {
+        if (article != null) {
+            article.update({
+                viewCount: ++article.viewCount
+            })
+        }
+        callback(article)
+    });
+};
+
+
+getDashboardArticles = function (callback) {
+    Article.findAll({ order: sequelize.literal("date DESC") }).then(articles => callback(articles));
 };
 
 module.exports.init = init;
 module.exports.getArticles = getArticles;
 module.exports.getArticleByKey = getArticleByKey;
+module.exports.getDashboardArticles = getDashboardArticles;
