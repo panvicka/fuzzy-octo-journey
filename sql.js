@@ -75,8 +75,9 @@ init = function () {
 
 
 getArticles = function (callback) {
-    Article.findAll({ order: sequelize.literal("date DESC"), 
-    where: {published: true} 
+    Article.findAll({
+        order: sequelize.literal("date DESC"),
+        where: { published: true }
     }).then(articles => callback(articles));
 };
 
@@ -96,7 +97,21 @@ getDashboardArticles = function (callback) {
     Article.findAll({ order: sequelize.literal("date DESC") }).then(articles => callback(articles));
 };
 
+
+
+updateArtcilePublishState = function (request, callback) {
+    Article.findOne({ where: { id: request.id } }).then(function (article) {
+        if (article != null) {
+            article.update({
+                published: request.published
+            });
+        }
+        callback(article);
+    })
+}
+
 module.exports.init = init;
 module.exports.getArticles = getArticles;
 module.exports.getArticleByKey = getArticleByKey;
 module.exports.getDashboardArticles = getDashboardArticles;
+module.exports.updateArtcilePublishState = updateArtcilePublishState;
