@@ -20,7 +20,7 @@ module.exports = function (app, sql) {
         });
     });
 
-    app.get("/dashboard/article/:key", function(request, response) {
+    app.get("/dashboard/article/:key", function (request, response) {
 
         sql.getDashboardArticleByKey(request.params.key, result =>
             response.send(result)
@@ -30,9 +30,20 @@ module.exports = function (app, sql) {
     });
 
 
-    app.put("/dashboard/article", function(request, response) {
-        sql.updateArticle(request.body, function(result) {
+    app.put("/dashboard/article", function (request, response) {
+        sql.updateArticle(request.body, function (result) {
             response.send(result);
+        })
+    });
+
+    app.delete("/dashboard/article/:id", function (request, response) {
+  
+        sql.deleteArticle(request.params.id, result => {
+            if (result != null) {
+                response.send(result);
+            } else {
+                response.send(400).send({ message: "Article could not be deleted" });
+            }
         })
     });
 
