@@ -1,3 +1,5 @@
+const { SlowBuffer } = require("buffer");
+
 module.exports = function (app, sql) {
 
 
@@ -26,5 +28,13 @@ module.exports = function (app, sql) {
 
 
     });
+
+
+    app.put("/dashboard/article", function(request, response) {
+        sql.updateArticle(request.body, function(result) {
+            response.send(result);
+        })
+    });
+
 
 }
