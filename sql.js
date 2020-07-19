@@ -130,15 +130,27 @@ updateArticle = function (request, callback) {
     });
 };
 
-deleteArticle = function(id, callback) {
+deleteArticle = function (id, callback) {
 
     Article.findOne({ where: { id: id } }).then(function (article) {
         if (article != null) {
             article.destroy().then(result => callback(result));
-        }else {
+        } else {
             callback(null);
         }
     });
+};
+
+
+createArticle = function (request, callback) {
+    Article.create({
+        title: request.title,
+        key: request.key,
+        date: request.date,
+        imageUrl: request.imageUrl,
+        description: request.description,
+        content: request.content,
+    }).then(article => callback(article));
 };
 
 
@@ -152,3 +164,4 @@ module.exports.updateArtcilePublishState = updateArtcilePublishState;
 module.exports.getDashboardArticleByKey = getDashboardArticleByKey;
 module.exports.updateArticle = updateArticle;
 module.exports.deleteArticle = deleteArticle;
+module.exports.createArticle = createArticle;

@@ -37,13 +37,20 @@ module.exports = function (app, sql) {
     });
 
     app.delete("/dashboard/article/:id", function (request, response) {
-  
+
         sql.deleteArticle(request.params.id, result => {
             if (result != null) {
                 response.send(result);
             } else {
                 response.send(400).send({ message: "Article could not be deleted" });
             }
+        })
+    });
+
+    app.post("/dashboard/article", function (request, response) {
+
+        sql.createArticle(request.body, function (result) {
+            response.send(result);
         })
     });
 
