@@ -12,6 +12,12 @@ const sequelize = new Sequelize("ngblog", "root", "1234",
     });
 
 
+const User = sequelize.define("user", {
+    name: { type: Sequelize.STRING, allowNull: false },
+    password: { type: Sequelize.STRING, allowNull: false },
+    salt: { type: Sequelize.STRING, allowNull: false },
+});
+
 const Article = sequelize.define('article', {
     // id is given automatically 
     title: { type: Sequelize.STRING },
@@ -71,6 +77,8 @@ init = function () {
             published: false,
         });
     });
+
+    User.sync();
 }
 
 
@@ -154,6 +162,15 @@ createArticle = function (request, callback) {
 };
 
 
+addUser = function (user, callback) {
+    User.create({
+        name: user.name.toLowerCase(),
+        password: user.password,
+        salt: user.salt,
+    }).then(callback(true));
+};
+
+
 
 
 module.exports.init = init;
@@ -165,3 +182,4 @@ module.exports.getDashboardArticleByKey = getDashboardArticleByKey;
 module.exports.updateArticle = updateArticle;
 module.exports.deleteArticle = deleteArticle;
 module.exports.createArticle = createArticle;
+module.exports.addUser = addUser;
