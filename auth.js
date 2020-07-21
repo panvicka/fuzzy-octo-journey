@@ -1,3 +1,5 @@
+const { SlowBuffer } = require("buffer");
+
 module.exports = function (app, sql) {
 
     const crypto = require("crypto");
@@ -16,6 +18,18 @@ module.exports = function (app, sql) {
         });
 
     });
+
+
+    app.post("/user/login", function (request, response) {
+         const name = request.body.name;
+        const password = request.body.password;
+
+        sql.login({ name, password }, result => {
+            response.send(result);
+        });
+
+    });
+
 };
 
 
