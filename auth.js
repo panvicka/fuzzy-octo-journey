@@ -1,7 +1,7 @@
 const { SlowBuffer } = require("buffer");
 
 module.exports = function (app, sql) {
-
+    const jwtUtil = require("./jwtUtil");
     const crypto = require("crypto");
 
 
@@ -21,11 +21,16 @@ module.exports = function (app, sql) {
 
 
     app.post("/user/login", function (request, response) {
-         const name = request.body.name;
+        const name = request.body.name;
         const password = request.body.password;
 
         sql.login({ name, password }, result => {
-            response.send(result);
+          if (!result) {
+              response.send(401);
+          } else {
+              var token = jwtUtil.signJwt(name);
+              response.send(token);
+          }
         });
 
     });

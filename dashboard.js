@@ -1,12 +1,18 @@
 const { SlowBuffer } = require("buffer");
 
+const jwtUtil = require("./jwtUtil");
+
 module.exports = function (app, sql) {
 
 
     app.get("/dashboard/overview", function (request, response) {
-        sql.getDashboardArticles(result => response.send(result));
-
-
+        const token = request.get("Authorization");
+        const verified = jwtUtil.verifyJwt(token);
+        if (!verified) {
+            response.sendStatus(401);
+        } else {
+            sql.getDashboardArticles(result => response.send(result));
+        }
     });
 
 
